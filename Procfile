@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:$PORT app:app
+web: gunicorn --certfile server.pem --keyfile server.key --bind 0.0.0.0:$PORT app:app
