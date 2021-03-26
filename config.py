@@ -3,7 +3,7 @@ import os
 
 
 config = {
-         'username': 'qmul-cc-mini-project',
+         'username': 'qmul-cc-mini-project-group-24',
 
          'password': os.environ['password'],
 
