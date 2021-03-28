@@ -75,7 +75,7 @@ session.execute('CREATE TABLE IF NOT EXISTS miniproj.admins (admin_id int PRIMAR
 #</createTable>
 
 #<insertData>
-session.execute("INSERT INTO  miniproj.admins  (admin_id, admin_name , password) VALUES (%s,%s,%s)", [10000,'Admin',pwd_to_hash('admin@123'])
+session.execute("INSERT INTO  miniproj.admins  (admin_id, admin_name , password) VALUES (%s,%s,%s)", [10000,'Admin',pwd_to_hash('admin@123')])
 #</insertData>
 
 #<queryAllItems>
