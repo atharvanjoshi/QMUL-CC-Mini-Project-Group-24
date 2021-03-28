@@ -15,6 +15,7 @@ import urllib.request, urllib.response
 import flask
 from flask import Flask, request, jsonify
 from flask.templating import render_template
+
 app = Flask(__name__, template_folder='Templates')
 
 def PrintTable(rows):
