@@ -32,6 +32,8 @@ def index():
 
 @app.route('/studentLogin/', methods=['GET', 'POST'])
 def studentLogin():
+    ''' Render the html and authentification method'''
+
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
         return(flask.render_template('studentLogin.html'))
@@ -42,11 +44,13 @@ def studentLogin():
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
+        # Connect to Cassandra DB
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
         #</authenticateAndConnect>
         rows = session.execute("SELECT * FROM miniproj.students WHERE student_id=" + u_id + " AND password='" + pwd + "' ALLOW FILTERING")
         
+        # Verify user's credentials
         if len(rows.current_rows) == 0:
             result = 'Wrong Username or Password'
         else:
@@ -55,6 +59,7 @@ def studentLogin():
                 year = t.year
             rows = session.execute("SELECT subject_name, time FROM miniproj.subjects WHERE year='" + str(year) + "' ALLOW FILTERING")
             cluster.shutdown()
+            # Print student's data if Login successful
             result = PrintTable(rows)
         cluster.shutdown()
         return flask.render_template('studentLogin.html', result = result)
@@ -99,6 +104,7 @@ def teacherLogin():
         #</authenticateAndConnect>
         rows = session.execute("SELECT * FROM miniproj.teachers WHERE teacher_id=" + u_id + " AND password='" + pwd + "' ALLOW FILTERING")
         
+        # Verify teacher's credentials
         if len(rows.current_rows) == 0:
             result = 'Wrong Username or Password'
         else:
@@ -110,6 +116,7 @@ def teacherLogin():
                 year = t.year
             rows = session.execute("SELECT student_id,student_name FROM miniproj.students WHERE year='" + str(year) + "' ALLOW FILTERING")
             cluster.shutdown()
+            # Print students's data list
             result = PrintTable(rows)
         return flask.render_template('teacherLogin.html', result = result)
 
@@ -136,6 +143,7 @@ def insertStudent():
         next_id = int(next_id) + 1
         #</authenticateAndConnect>
         try:
+            # Insert new student data
             rows = session.execute("INSERT INTO  miniproj.students  (student_id, student_name , password, year) VALUES (%s,%s,%s,%s)", [next_id,name,pwd, year])
             result = 'Inserted successfully. User ID of new record is '+ str(next_id)
         except:
@@ -165,6 +173,7 @@ def insertAdmin():
         next_id = int(next_id) + 1
         #</authenticateAndConnect>
         try:
+            # Insert new admin data
             rows = session.execute("INSERT INTO  miniproj.admins  (admin_id, admin_name , password) VALUES (%s,%s,%s)", [next_id,name,pwd])
             result = 'Inserted successfully. User ID of new record is '+ str(next_id)
         except:
@@ -200,6 +209,7 @@ def insertTeacher():
         next_id = int(next_id) + 1
         #</authenticateAndConnect>
         try:
+            # Insert new teacher data
             rows = session.execute("INSERT INTO  miniproj.teachers  (teacher_id, teacher_name , password, subject_id) VALUES (%s,%s,%s,%s)", [next_id,name,pwd,int(subid)])
             result = 'Inserted successfully. User ID of new record is '+ str(next_id)
         except Exception as e:
@@ -223,7 +233,9 @@ def insertSubject():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with subjects and schedule from the DB
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE year='" + year + "' AND time='" + time + "' ALLOW FILTERING")
+        # Check for clashes between subjects
         if len(rows.current_rows) > 0:
             cluster.shutdown()
             return flask.render_template('insertSubject.html', result = 'Clash detected. Please enter a new time.')
@@ -235,6 +247,7 @@ def insertSubject():
         next_id = int(next_id) + 1
         #</authenticateAndConnect>
         try:
+            # Insert new subject and return subject_id if successful
             rows = session.execute("INSERT INTO  miniproj.subjects  (subject_id, subject_name , time, year) VALUES (%s,%s,%s,%s)", [next_id,name,time, year])
             result = 'Inserted successfully. User ID of new record is '+ str(next_id)
         except Exception as e:
@@ -255,12 +268,15 @@ def deleteSubject():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with subjects from the DB
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE subject_id=" + subid)
+        # Check if selected subject exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('deleteSubject.html', result = 'Invalid Subject ID')
         #</authenticateAndConnect>
         try:
+            # Delete selected subject from the DB
             rows = session.execute("DELETE FROM miniproj.subjects  WHERE subject_id = "+subid)
             result = 'Deleted Successfully'
         except Exception as e:
@@ -281,12 +297,15 @@ def deleteAdmin():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with existing admins from the DB
         rows = session.execute("SELECT * FROM miniproj.admins WHERE admin_id=" + subid)
+        # Check if selected admin exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('deleteAdmin.html', result = 'Invalid Admin ID')
         #</authenticateAndConnect>
         try:
+            # Delete selected admin
             rows = session.execute("DELETE FROM miniproj.admins  WHERE admin_id = "+subid)
             result = 'Deleted Successfully'
         except Exception as e:
@@ -307,12 +326,15 @@ def deleteTeacher():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with existing teachers from the DB
         rows = session.execute("SELECT * FROM miniproj.teachers WHERE teacher_id=" + subid)
+        # Check if selected teacher exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('deleteTeacher.html', result = 'Invalid Teacher ID')
         #</authenticateAndConnect>
         try:
+            # Delete seleted teacher
             rows = session.execute("DELETE FROM miniproj.teachers  WHERE teacher_id = "+subid)
             result = 'Deleted Successfully'
         except Exception as e:
@@ -333,12 +355,15 @@ def deleteStudent():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with existing students from the DB
         rows = session.execute("SELECT * FROM miniproj.students WHERE student_id=" + subid)
+        # Check if selected student exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('deleteStudent.html', result = 'Invalid Student ID')
         #</authenticateAndConnect>
         try:
+            # Delete selected student
             rows = session.execute("DELETE FROM miniproj.students  WHERE student_id = "+subid)
             result = 'Deleted Successfully'
         except Exception as e:
@@ -361,12 +386,15 @@ def updateStudent():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with existing students from the DB
         rows = session.execute("SELECT * FROM miniproj.students WHERE student_id=" + subid)
+        # Check if selected student exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('updateStudent.html', result = 'Invalid Student ID')
         #</authenticateAndConnect>
         try:
+            # Update selected student's information (studnet's name, year)
             rows = session.execute("UPDATE miniproj.students SET student_name='"+name+"', year='"+year+"' WHERE student_id = "+subid)
             result = 'Updated Successfully'
         except Exception as e:
@@ -390,16 +418,20 @@ def updateSubject():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with existing subjects from the DB
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE subject_id=" + subid)
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('updateSubject.html', result = 'Invalid Subject ID')
+        # Retreive data with existing subjects and schedule from the DB
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE year='" + year + "' AND time='" + time + "' ALLOW FILTERING")
+        # Check for clashes between subjects
         if len(rows.current_rows) > 0:
             cluster.shutdown()
             return flask.render_template('insertSubject.html', result = 'Clash detected. Please enter a new time.')
         #</authenticateAndConnect>
         try:
+            # Edit selected subject information (name, year, time, subject id)
             rows = session.execute("UPDATE miniproj.subjects SET subject_name='"+name+"', year='"+year+"', time='"+time+"' WHERE subject_id = "+subid)
             result = 'Updated Successfully'
         except Exception as e:
@@ -421,12 +453,15 @@ def updateAdmin():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with existing admins from the DB
         rows = session.execute("SELECT * FROM miniproj.admins WHERE admin_id=" + subid)
+        # Check if selected admin exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('updateAdmin.html', result = 'Invalid Admin ID')
         #</authenticateAndConnect>
         try:
+            # Edit selected admin's information (name, admin id)
             rows = session.execute("UPDATE miniproj.admins SET admin_name='"+name+"' WHERE admin_id = "+subid)
             result = 'Updated Successfully'
         except Exception as e:
@@ -449,16 +484,21 @@ def updateTeacher():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with selected teacher from the DB
         rows = session.execute("SELECT * FROM miniproj.teachers WHERE teacher_id=" + subid)
+        # Check if teacher exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('updateTeacher.html', result = 'Invalid Teacher ID')
+        # Retreive data with selected subject for selected teacher from the DB
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE subject_id=" + subjectid + " ALLOW FILTERING")
+        # Check if selected subject exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('updateTeacher.html', result = "Subject ID does not exist")
         #</authenticateAndConnect>
         try:
+            # Edit selected teacher's information (name, subject id, teacher id)
             rows = session.execute("UPDATE miniproj.teachers SET teacher_name='"+name+"', subject_id="+subjectid+" WHERE teacher_id = "+subid)
             result = 'Updated Successfully'
         except Exception as e:
@@ -480,12 +520,15 @@ def resetTeacherPassword():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with selected teacher from the DB
         rows = session.execute("SELECT * FROM miniproj.teachers WHERE teacher_id=" + subid)
+        # Check if teacher exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('resetTeacherPassword.html', result = 'Invalid Teacher ID')
         #</authenticateAndConnect>
         try:
+            # Edit password for the selected teacher
             rows = session.execute("UPDATE miniproj.teachers SET password='"+pwd+"' WHERE teacher_id = "+subid)
             result = 'Resetted Successfully'
         except Exception as e:
@@ -507,12 +550,15 @@ def resetStudentPassword():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with selected student from the DB
         rows = session.execute("SELECT * FROM miniproj.students WHERE student_id=" + subid)
+        # Check if the student exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('resetStudentPassword.html', result = 'Invalid Student ID')
         #</authenticateAndConnect>
         try:
+            # Edit password for the selected student
             rows = session.execute("UPDATE miniproj.students SET password='"+pwd+"' WHERE student_id = "+subid)
             result = 'Updated Successfully'
         except Exception as e:
@@ -534,12 +580,15 @@ def resetAdminPassword():
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
         cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
         session = cluster.connect()
+        # Retreive data with selected admin from the DB
         rows = session.execute("SELECT * FROM miniproj.admins WHERE admin_id=" + subid)
+        # Check if selected admin exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
             return flask.render_template('resetAdminPassword.html', result = 'Invalid Admin ID')
         #</authenticateAndConnect>
         try:
+            # Edit password for the selected admin
             rows = session.execute("UPDATE miniproj.admins SET password='"+pwd+"' WHERE admin_id = "+subid)
             result = 'Updated Successfully'
         except Exception as e:
@@ -559,6 +608,7 @@ def resetAdminPassword():
 
 @app.route('/getholidays/', methods=['GET'])
 def getHolidays():
+    # Retreive information on public holiday's from the external api
     url = 'https://date.nager.at/api/v2/publicholidays/' + str((datetime.datetime.now()).year) + '/GB'
     with urllib.request.urlopen(url) as response:
         return json.JSONEncoder().encode(json.load(response))
@@ -571,6 +621,7 @@ def getStudents():
     cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
     session = cluster.connect()
     #</authenticateAndConnect>
+    # Retreive data with all students from the DB
     rows = session.execute('SELECT * FROM miniproj.students')
     cluster.shutdown()
     #<createKeyspace>
@@ -593,6 +644,7 @@ def getTeachers():
     cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
     session = cluster.connect()
     #</authenticateAndConnect>
+    # Retreive data with all teachers from the DB
     rows = session.execute('SELECT * FROM miniproj.teachers')
     cluster.shutdown()
     #<createKeyspace>
@@ -616,6 +668,7 @@ def getSubjects():
     cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
     session = cluster.connect()
     #</authenticateAndConnect>
+    # Retreive data with all subjects from the DB
     rows = session.execute('SELECT * FROM miniproj.subjects')
     cluster.shutdown()
     #<createKeyspace>
@@ -639,6 +692,7 @@ def getAdmins():
     cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
     session = cluster.connect()
     #</authenticateAndConnect>
+    # Retreive data with all admins from the DB
     rows = session.execute('SELECT * FROM miniproj.admins')
     cluster.shutdown()
     #<createKeyspace>
