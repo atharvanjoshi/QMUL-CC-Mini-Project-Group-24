@@ -15,6 +15,8 @@ import urllib.request, urllib.response
 import flask
 from flask import Flask, request, jsonify
 from flask.templating import render_template
+import hashlib
+import hmac
 app = Flask(__name__, template_folder='Templates')
 
 def PrintTable(rows):
@@ -22,6 +24,13 @@ def PrintTable(rows):
     for r in rows:
         t.append(r)
     return t
+
+
+def pwd_to_hash(pwd_str):
+    ''' create a string with the hash value from a password string '''
+    sha256 = hmac.new(pwd_str.encode('UTF-8'), digestmod=hashlib.sha256)
+    hash_value = sha256.hexdigest()
+    return hash_value
 
 @app.route('/', methods=['GET'])
 def index():
@@ -40,7 +49,8 @@ def studentLogin():
     
     if flask.request.method == 'POST':
         u_id = flask.request.form['uid']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
@@ -72,7 +82,8 @@ def adminLogin():
     
     if flask.request.method == 'POST':
         u_id = flask.request.form['uid']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
@@ -95,7 +106,8 @@ def teacherLogin():
     
     if flask.request.method == 'POST':
         u_id = flask.request.form['uid']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
@@ -128,7 +140,8 @@ def insertStudent():
     
     if flask.request.method == 'POST':
         name = flask.request.form['name']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         year = flask.request.form['year']
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
@@ -159,7 +172,8 @@ def insertAdmin():
     
     if flask.request.method == 'POST':
         name = flask.request.form['name']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
@@ -190,7 +204,8 @@ def insertTeacher():
     
     if flask.request.method == 'POST':
         name = flask.request.form['name']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         subid = flask.request.form['subid']
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
@@ -514,7 +529,8 @@ def resetTeacherPassword():
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
@@ -544,7 +560,8 @@ def resetStudentPassword():
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
@@ -574,7 +591,8 @@ def resetAdminPassword():
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
-        pwd = flask.request.form['pwd']
+        # pwd is a string with hash value that is checked against stored hash value in the DB
+        pwd = pwd_to_hash(flask.request.form['pwd'])
         ssl_context = SSLContext(PROTOCOL_TLSv1_2)
         ssl_context.verify_mode = CERT_NONE
         auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
