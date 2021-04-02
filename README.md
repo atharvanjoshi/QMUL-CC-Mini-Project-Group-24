@@ -1,4 +1,8 @@
-# School App and API
+# Rest API for the Cloud Computing mini-project
+
+This Rest API was created under the framework of the Cloud Computing module, from the Queen Mary, University of London.
+
+To use the API, username and password or token based authentication is required.
 
 This is a Flask app with an API layer. It has the following properties:
 
