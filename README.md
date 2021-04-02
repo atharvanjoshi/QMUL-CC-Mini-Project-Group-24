@@ -43,3 +43,6 @@ Reset Password of Teacher: This page can reset the Teacher password by entering 
 Reset Password of Admins: This page can reset the Admins pasword by entering their ID.
 
 Holiday List: Is an external an external REST service to complement its functionality with the existing REST API. The main function is to display the Holiday Calendar for the United Kingdom.
+
+
+For the hash-based authentication we have used the following python libraries: HMAC, hashlib. HMAC is a framework to create hash-based message authentication code (MAC), while hashlib is a library that provides implementation of different hashing algorithms.  Our implementation uses SHA-256 hashing algorithm. Upon creation of a new user, our implementation creates a hash-value from the provided password keyword and stores this value in the database, further when authentificating users the application again creates a hash-value from a password keyword and compares it against the hash-value stored in the database.
