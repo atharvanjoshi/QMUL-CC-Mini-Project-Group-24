@@ -7,32 +7,32 @@ To use the API, username and password or token based authentication is required.
 This is a Flask app with an API layer. It has the following properties:
 
     It has the following relational entities:
-        Student
-        Teacher
-        Subject
-        Administrator
+        - Student
+        - Teacher
+        - Subject
+        - Administrator
     
 Student Login: Only registered Students can have access to a list of their subjects (time table) by pressing the Student Login button if they are not registered to the Database will print login unsuccessful.
  
 Teacher Login: Only registered Teachers can have access to a list of students by pressing the Teachers Login button if they are not registered to the Database will print login unsuccessful.
  
-Administrator Login:
+__Administrator Login:
  
-Insert Students: In this page the user can register a new Student by inserting their full name, password and choosing the year of studies.
+**Insert Students:** In this page the user can register a new Student by inserting their full name, password and choosing the year of studies.
 
-Insert teachers: In this page the user can register a new Teacher by inserting their full name, password and choosing the subject ID that of the subject that they teach.
+__Insert teachers:__ In this page the user can register a new Teacher by inserting their full name, password and choosing the subject ID that of the subject that they teach.
 
-Insert Admins: In this page the user can register a new Admin by inserting their full name and password.
+__Insert Admins:__ In this page the user can register a new Admin by inserting their full name and password.
 
-Delete Students: In this page the user can delete a Student entry by submiting their ID.
+__Delete Students:__ In this page the user can delete a Student entry by submiting their ID.
 
-Delete Teacher: In this page the user can delete a Teacher entry by submiting their ID.
+__Delete Teacher:__ In this page the user can delete a Teacher entry by submiting their ID.
 
-Delete Admin: In this page the user can delete an Admin entry by submiting their ID.
+__Delete Admin:__ In this page the user can delete an Admin entry by submiting their ID.
 
-Delete Subject: In this page the user can delete a Subject entry by submiting their ID.
+__Delete Subject:__ In this page the user can delete a Subject entry by submiting their ID.
 
-Update Students (not password): This page can Update Students details by insert their ID.
+__Update Students__ (not password): This page can Update Students details by insert their ID.
 
 Update Teachers (not password): This page can Update Teachers details by insert their ID.
 
