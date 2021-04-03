@@ -64,7 +64,7 @@ This is a Flask app with an API layer. It has the following properties:
 
 - __Reset Password of Admins:__ This page can reset the Admins pasword by entering their ID.
 
-# EXTERNAL API
+## EXTERNAL API
 
 __Holiday List:__ Is an external an external REST service to complement its functionality with the existing REST API. The main function is to display the Holiday Calendar for the United Kingdom.
 
