@@ -6,7 +6,7 @@ You can have access https://qmul-cc-miniproj-group24.azurewebsites.net/
 Cloud Computing Mini Project done by Group 24 at Queen Mary University of London
 
 # External Secure Database
-The project has two main parts, namely the secure database and the flask application that provides a front-end to a user and communicates with the database. The centerpiece of the application is a secure database that has information about students, teachers, admin, subjects. The Database has been developed in Cassandra and is hosted on Azure.
+The project has two main parts, namely the secure database and the flask application that provides a front-end to a user and communicates with the database. The centerpiece of the application is a secure database that has information about students, teachers, admin, subjects. The Database has been developed in Cassandra Cosmos DB and is hosted on Azure.
 
 # Role Based Access policies
 The database itself is secured using Role Based Access Policies. There are multiple access levels that allows/restricts access to the database and operations with it on a user's role in the organization.
