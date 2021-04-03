@@ -1,5 +1,7 @@
 # Rest API for the Cloud Computing mini-project
 
+You can have access https://qmul-cc-miniproj-group24.azurewebsites.net/
+
 # QMUL-CC-Mini-Project-Group-24
 Cloud Computing Mini Project done by Group 24 at Queen Mary University of London
 
