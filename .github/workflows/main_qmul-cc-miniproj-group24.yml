@@ -32,4 +32,4 @@ jobs:
       with:
         app-name: 'qmul-cc-miniproj-group24'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2b24d29ba2cb4115befe38250866957e }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_3b06d3f03b1c4c848f03c4c932725159 }}
