@@ -20,7 +20,7 @@ All communications between a client and our application is encrypted communicati
 # Hash-based authentication
 To secure passwords stored stored in the database we have implemented the hash-based authentication using the following python libraries: HMAC, hashlib. HMAC is a framework to create hash-based message authentication code (MAC), while hashlib is a library that provides implementation of different hashing algorithms. Our implementation uses SHA-256 hashing algorithm. Upon creation of a new user, our implementation creates a hash-value from the provided password keyword and stores this value in the database, further when authentificating users the application again creates a hash-value from a password keyword and compares it against the hash-value stored in the database.
 
-This Rest API was created under the framework of the Cloud Computing module, from the Queen Mary, University of London.
+# This Rest API was created under the framework of the Cloud Computing module, from the Queen Mary, University of London.
 
 To use the API, username and password or token based authentication is required.
 
