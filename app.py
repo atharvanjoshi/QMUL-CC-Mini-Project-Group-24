@@ -36,7 +36,7 @@ def pwd_to_hash(pwd_str):
 def index():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('index.html'))
+        return(flask.render_template('index.html')), 200
 
 
 @app.route('/studentLogin/', methods=['GET', 'POST'])
@@ -45,7 +45,7 @@ def studentLogin():
 
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('studentLogin.html'))
+        return(flask.render_template('studentLogin.html')), 200
     
     if flask.request.method == 'POST':
         u_id = flask.request.form['uid']
@@ -72,13 +72,13 @@ def studentLogin():
             # Print student's data if Login successful
             result = PrintTable(rows)
         cluster.shutdown()
-        return flask.render_template('studentLogin.html', result = result)
+        return flask.render_template('studentLogin.html', result = result), 200
 
 @app.route('/adminLogin/', methods=['GET', 'POST'])
 def adminLogin():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('adminLogin.html'))
+        return(flask.render_template('adminLogin.html')), 200
     
     if flask.request.method == 'POST':
         u_id = flask.request.form['uid']
@@ -96,13 +96,13 @@ def adminLogin():
             result = 'Wrong Username or Password'
         else:
             result = 'Login Successful'
-        return flask.render_template('adminLogin.html', result = result)
+        return flask.render_template('adminLogin.html', result = result), 200
 
 @app.route('/teacherLogin/', methods=['GET', 'POST'])
 def teacherLogin():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('teacherLogin.html'))
+        return(flask.render_template('teacherLogin.html')), 200
     
     if flask.request.method == 'POST':
         u_id = flask.request.form['uid']
@@ -130,13 +130,13 @@ def teacherLogin():
             cluster.shutdown()
             # Print students's data list
             result = PrintTable(rows)
-        return flask.render_template('teacherLogin.html', result = result)
+        return flask.render_template('teacherLogin.html', result = result), 200
 
 @app.route('/insertStudent/', methods=['GET', 'POST'])
 def insertStudent():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('insertStudent.html'))
+        return(flask.render_template('insertStudent.html')), 200
     
     if flask.request.method == 'POST':
         name = flask.request.form['name']
@@ -162,13 +162,13 @@ def insertStudent():
         except:
             result = 'Failed to insert'
         cluster.shutdown()
-        return flask.render_template('insertStudent.html', result = result)
+        return flask.render_template('insertStudent.html', result = result), 201
 
 @app.route('/insertAdmin/', methods=['GET', 'POST'])
 def insertAdmin():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('insertAdmin.html'))
+        return(flask.render_template('insertAdmin.html')), 200
     
     if flask.request.method == 'POST':
         name = flask.request.form['name']
@@ -193,14 +193,14 @@ def insertAdmin():
         except:
             result = 'Failed to insert'
         cluster.shutdown()
-        return flask.render_template('insertAdmin.html', result = result)
+        return flask.render_template('insertAdmin.html', result = result), 201
 
 
 @app.route('/insertTeacher/', methods=['GET', 'POST'])
 def insertTeacher():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('insertTeacher.html'))
+        return(flask.render_template('insertTeacher.html')), 200
     
     if flask.request.method == 'POST':
         name = flask.request.form['name']
@@ -215,7 +215,7 @@ def insertTeacher():
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE subject_id=" + subid + " ALLOW FILTERING")
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('insertTeacher.html', result = "Subject ID does not exist")
+            return flask.render_template('insertTeacher.html', result = "Subject ID does not exist"), 400
         rows = session.execute("SELECT * FROM miniproj.teachers")
         next_id = 0
         for t in rows:
@@ -230,14 +230,14 @@ def insertTeacher():
         except Exception as e:
             result = 'Failed to insert'
         cluster.shutdown()
-        return flask.render_template('insertTeacher.html', result = result)
+        return flask.render_template('insertTeacher.html', result = result), 201
 
 
 @app.route('/insertSubject/', methods=['GET', 'POST'])
 def insertSubject():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('insertSubject.html'))
+        return(flask.render_template('insertSubject.html')), 200
     
     if flask.request.method == 'POST':
         name = flask.request.form['name']
@@ -253,7 +253,7 @@ def insertSubject():
         # Check for clashes between subjects
         if len(rows.current_rows) > 0:
             cluster.shutdown()
-            return flask.render_template('insertSubject.html', result = 'Clash detected. Please enter a new time.')
+            return flask.render_template('insertSubject.html', result = 'Clash detected. Please enter a new time.'), 400
         rows = session.execute("SELECT * FROM miniproj.subjects")
         next_id = 0
         for t in rows:
@@ -268,13 +268,13 @@ def insertSubject():
         except Exception as e:
             result = 'Failed to insert'
         cluster.shutdown()
-        return flask.render_template('insertSubject.html', result = result)
+        return flask.render_template('insertSubject.html', result = result), 201
 
 @app.route('/deleteSubject/', methods=['GET', 'POST'])
 def deleteSubject():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('deleteSubject.html'))
+        return(flask.render_template('deleteSubject.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -288,7 +288,7 @@ def deleteSubject():
         # Check if selected subject exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('deleteSubject.html', result = 'Invalid Subject ID')
+            return flask.render_template('deleteSubject.html', result = 'Invalid Subject ID'), 400
         #</authenticateAndConnect>
         try:
             # Delete selected subject from the DB
@@ -297,13 +297,13 @@ def deleteSubject():
         except Exception as e:
             result = 'Error deleting record'
         cluster.shutdown()
-        return flask.render_template('deleteSubject.html', result = result)
+        return flask.render_template('deleteSubject.html', result = result), 200
 
 @app.route('/deleteAdmin/', methods=['GET', 'POST'])
 def deleteAdmin():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('deleteAdmin.html'))
+        return(flask.render_template('deleteAdmin.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -317,7 +317,7 @@ def deleteAdmin():
         # Check if selected admin exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('deleteAdmin.html', result = 'Invalid Admin ID')
+            return flask.render_template('deleteAdmin.html', result = 'Invalid Admin ID'), 400
         #</authenticateAndConnect>
         try:
             # Delete selected admin
@@ -326,13 +326,13 @@ def deleteAdmin():
         except Exception as e:
             result = 'Error deleting record'
         cluster.shutdown()
-        return flask.render_template('deleteAdmin.html', result = result)
+        return flask.render_template('deleteAdmin.html', result = result), 200
 
 @app.route('/deleteTeacher/', methods=['GET', 'POST'])
 def deleteTeacher():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('deleteTeacher.html'))
+        return(flask.render_template('deleteTeacher.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -346,7 +346,7 @@ def deleteTeacher():
         # Check if selected teacher exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('deleteTeacher.html', result = 'Invalid Teacher ID')
+            return flask.render_template('deleteTeacher.html', result = 'Invalid Teacher ID'), 400
         #</authenticateAndConnect>
         try:
             # Delete seleted teacher
@@ -355,13 +355,13 @@ def deleteTeacher():
         except Exception as e:
             result = 'Error deleting record'
         cluster.shutdown()
-        return flask.render_template('deleteTeacher.html', result = result)
+        return flask.render_template('deleteTeacher.html', result = result), 200
 
 @app.route('/deleteStudent/', methods=['GET', 'POST'])
 def deleteStudent():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('deleteStudent.html'))
+        return(flask.render_template('deleteStudent.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -375,7 +375,7 @@ def deleteStudent():
         # Check if selected student exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('deleteStudent.html', result = 'Invalid Student ID')
+            return flask.render_template('deleteStudent.html', result = 'Invalid Student ID'), 400
         #</authenticateAndConnect>
         try:
             # Delete selected student
@@ -384,13 +384,13 @@ def deleteStudent():
         except Exception as e:
             result = 'Error deleting record'
         cluster.shutdown()
-        return flask.render_template('deleteStudent.html', result = result)
+        return flask.render_template('deleteStudent.html', result = result), 200
 
 @app.route('/updateStudent/', methods=['GET', 'POST'])
 def updateStudent():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('updateStudent.html'))
+        return(flask.render_template('updateStudent.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -406,7 +406,7 @@ def updateStudent():
         # Check if selected student exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('updateStudent.html', result = 'Invalid Student ID')
+            return flask.render_template('updateStudent.html', result = 'Invalid Student ID'), 400
         #</authenticateAndConnect>
         try:
             # Update selected student's information (studnet's name, year)
@@ -415,13 +415,13 @@ def updateStudent():
         except Exception as e:
             result = 'Error updating record'
         cluster.shutdown()
-        return flask.render_template('updateStudent.html', result = result)
+        return flask.render_template('updateStudent.html', result = result), 200
 
 @app.route('/updateSubject/', methods=['GET', 'POST'])
 def updateSubject():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('updateSubject.html'))
+        return(flask.render_template('updateSubject.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -437,13 +437,13 @@ def updateSubject():
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE subject_id=" + subid)
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('updateSubject.html', result = 'Invalid Subject ID')
+            return flask.render_template('updateSubject.html', result = 'Invalid Subject ID'), 400
         # Retreive data with existing subjects and schedule from the DB
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE year='" + year + "' AND time='" + time + "' ALLOW FILTERING")
         # Check for clashes between subjects
         if len(rows.current_rows) > 0:
             cluster.shutdown()
-            return flask.render_template('insertSubject.html', result = 'Clash detected. Please enter a new time.')
+            return flask.render_template('insertSubject.html', result = 'Clash detected. Please enter a new time.'), 400
         #</authenticateAndConnect>
         try:
             # Edit selected subject information (name, year, time, subject id)
@@ -452,13 +452,13 @@ def updateSubject():
         except Exception as e:
             result = 'Error updating record'
         cluster.shutdown()
-        return flask.render_template('updateStudent.html', result = result)
+        return flask.render_template('updateStudent.html', result = result), 200
 
 @app.route('/updateAdmin/', methods=['GET', 'POST'])
 def updateAdmin():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('updateAdmin.html'))
+        return(flask.render_template('updateAdmin.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -473,7 +473,7 @@ def updateAdmin():
         # Check if selected admin exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('updateAdmin.html', result = 'Invalid Admin ID')
+            return flask.render_template('updateAdmin.html', result = 'Invalid Admin ID'), 400
         #</authenticateAndConnect>
         try:
             # Edit selected admin's information (name, admin id)
@@ -482,13 +482,13 @@ def updateAdmin():
         except Exception as e:
             result = 'Error updating record'
         cluster.shutdown()
-        return flask.render_template('updateAdmin.html', result = result)
+        return flask.render_template('updateAdmin.html', result = result), 200
 
 @app.route('/updateTeacher/', methods=['GET', 'POST'])
 def updateTeacher():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('updateTeacher.html'))
+        return(flask.render_template('updateTeacher.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -504,13 +504,13 @@ def updateTeacher():
         # Check if teacher exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('updateTeacher.html', result = 'Invalid Teacher ID')
+            return flask.render_template('updateTeacher.html', result = 'Invalid Teacher ID'), 400
         # Retreive data with selected subject for selected teacher from the DB
         rows = session.execute("SELECT * FROM miniproj.subjects WHERE subject_id=" + subjectid + " ALLOW FILTERING")
         # Check if selected subject exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('updateTeacher.html', result = "Subject ID does not exist")
+            return flask.render_template('updateTeacher.html', result = "Subject ID does not exist"), 400
         #</authenticateAndConnect>
         try:
             # Edit selected teacher's information (name, subject id, teacher id)
@@ -519,13 +519,13 @@ def updateTeacher():
         except Exception as e:
             result = 'Error updating record'
         cluster.shutdown()
-        return flask.render_template('updateTeacher.html', result = result)
+        return flask.render_template('updateTeacher.html', result = result), 200
 
 @app.route('/resetTeacherPassword/', methods=['GET', 'POST'])
 def resetTeacherPassword():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('resetTeacherPassword.html'))
+        return(flask.render_template('resetTeacherPassword.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -541,7 +541,7 @@ def resetTeacherPassword():
         # Check if teacher exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('resetTeacherPassword.html', result = 'Invalid Teacher ID')
+            return flask.render_template('resetTeacherPassword.html', result = 'Invalid Teacher ID'), 400
         #</authenticateAndConnect>
         try:
             # Edit password for the selected teacher
@@ -550,13 +550,13 @@ def resetTeacherPassword():
         except Exception as e:
             result = 'Error resetting record'
         cluster.shutdown()
-        return flask.render_template('resetTeacherPassword.html', result = result)
+        return flask.render_template('resetTeacherPassword.html', result = result), 200
 
 @app.route('/resetStudentPassword/', methods=['GET', 'POST'])
 def resetStudentPassword():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('resetStudentPassword.html'))
+        return(flask.render_template('resetStudentPassword.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -572,7 +572,7 @@ def resetStudentPassword():
         # Check if the student exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('resetStudentPassword.html', result = 'Invalid Student ID')
+            return flask.render_template('resetStudentPassword.html', result = 'Invalid Student ID'), 400
         #</authenticateAndConnect>
         try:
             # Edit password for the selected student
@@ -581,13 +581,13 @@ def resetStudentPassword():
         except Exception as e:
             result = 'Error updating record'
         cluster.shutdown()
-        return flask.render_template('resetStudentPassword.html', result = result)
+        return flask.render_template('resetStudentPassword.html', result = result), 200
 
 @app.route('/resetAdminPassword/', methods=['GET', 'POST'])
 def resetAdminPassword():
     if flask.request.method == 'GET':
         # Just render the initial form, to get input
-        return(flask.render_template('resetAdminPassword.html'))
+        return(flask.render_template('resetAdminPassword.html')), 200
     
     if flask.request.method == 'POST':
         subid = flask.request.form['subid']
@@ -603,7 +603,7 @@ def resetAdminPassword():
         # Check if selected admin exists
         if len(rows.current_rows) == 0:
             cluster.shutdown()
-            return flask.render_template('resetAdminPassword.html', result = 'Invalid Admin ID')
+            return flask.render_template('resetAdminPassword.html', result = 'Invalid Admin ID'), 400
         #</authenticateAndConnect>
         try:
             # Edit password for the selected admin
@@ -612,7 +612,7 @@ def resetAdminPassword():
         except Exception as e:
             result = 'Error updating record'
         cluster.shutdown()
-        return flask.render_template('resetAdminPassword.html', result = result)
+        return flask.render_template('resetAdminPassword.html', result = result), 200
 
 
 
@@ -629,7 +629,7 @@ def getHolidays():
     # Retreive information on public holiday's from the external api
     url = 'https://date.nager.at/api/v2/publicholidays/' + str((datetime.datetime.now()).year) + '/GB'
     with urllib.request.urlopen(url) as response:
-        return json.JSONEncoder().encode(json.load(response))
+        return json.JSONEncoder().encode(json.load(response)), 200
 
 @app.route('/getallstudents/', methods=['GET'])
 def getStudents():
@@ -642,16 +642,8 @@ def getStudents():
     # Retreive data with all students from the DB
     rows = session.execute('SELECT * FROM miniproj.students')
     cluster.shutdown()
-    #<createKeyspace>
-    # print ("\nCreating Keyspace")
-    # session.execute('CREATE KEYSPACE IF NOT EXISTS uprofile WITH replication = {\'class\': \'NetworkTopologyStrategy\', \'datacenter\' : \'1\' }')
-    #</createKeyspace>
-
-    #<createTable>
-    # print ("\nCreating Table")
-    # session.execute('CREATE TABLE IF NOT EXISTS uprofile.user (user_id int PRIMARY KEY, user_name text, user_bcity text)')
     # Return the response in json format
-    return jsonify(PrintTable(rows))
+    return jsonify(PrintTable(rows)), 200
 
 
 @app.route('/getallteachers/', methods=['GET'])
@@ -665,16 +657,8 @@ def getTeachers():
     # Retreive data with all teachers from the DB
     rows = session.execute('SELECT * FROM miniproj.teachers')
     cluster.shutdown()
-    #<createKeyspace>
-    # print ("\nCreating Keyspace")
-    # session.execute('CREATE KEYSPACE IF NOT EXISTS uprofile WITH replication = {\'class\': \'NetworkTopologyStrategy\', \'datacenter\' : \'1\' }')
-    #</createKeyspace>
-
-    #<createTable>
-    # print ("\nCreating Table")
-    # session.execute('CREATE TABLE IF NOT EXISTS uprofile.user (user_id int PRIMARY KEY, user_name text, user_bcity text)')
     # Return the response in json format
-    return jsonify(PrintTable(rows))
+    return jsonify(PrintTable(rows)), 200
 
 
 
@@ -689,16 +673,8 @@ def getSubjects():
     # Retreive data with all subjects from the DB
     rows = session.execute('SELECT * FROM miniproj.subjects')
     cluster.shutdown()
-    #<createKeyspace>
-    # print ("\nCreating Keyspace")
-    # session.execute('CREATE KEYSPACE IF NOT EXISTS uprofile WITH replication = {\'class\': \'NetworkTopologyStrategy\', \'datacenter\' : \'1\' }')
-    #</createKeyspace>
-
-    #<createTable>
-    # print ("\nCreating Table")
-    # session.execute('CREATE TABLE IF NOT EXISTS uprofile.user (user_id int PRIMARY KEY, user_name text, user_bcity text)')
     # Return the response in json format
-    return jsonify(PrintTable(rows))
+    return jsonify(PrintTable(rows)), 200
 
 
 
@@ -713,60 +689,8 @@ def getAdmins():
     # Retreive data with all admins from the DB
     rows = session.execute('SELECT * FROM miniproj.admins')
     cluster.shutdown()
-    #<createKeyspace>
-    # print ("\nCreating Keyspace")
-    # session.execute('CREATE KEYSPACE IF NOT EXISTS uprofile WITH replication = {\'class\': \'NetworkTopologyStrategy\', \'datacenter\' : \'1\' }')
-    #</createKeyspace>
-
-    #<createTable>
-    # print ("\nCreating Table")
-    # session.execute('CREATE TABLE IF NOT EXISTS uprofile.user (user_id int PRIMARY KEY, user_name text, user_bcity text)')
     # Return the response in json format
-    return jsonify(PrintTable(rows))
-
-
-
-#<authenticateAndConnect>
-# ssl_context = SSLContext(PROTOCOL_TLSv1_2)
-# ssl_context.verify_mode = CERT_NONE
-# auth_provider = PlainTextAuthProvider(username=cfg.config['username'], password=cfg.config['password'])
-# cluster = Cluster([cfg.config['contactPoint']], port = cfg.config['port'], auth_provider=auth_provider,ssl_context=ssl_context)
-# session = cluster.connect()
-# #</authenticateAndConnect>
-
-# #<createKeyspace>
-# print ("\nCreating Keyspace")
-# session.execute('CREATE KEYSPACE IF NOT EXISTS uprofile WITH replication = {\'class\': \'NetworkTopologyStrategy\', \'datacenter\' : \'1\' }')
-# #</createKeyspace>
-
-# #<createTable>
-# print ("\nCreating Table")
-# session.execute('CREATE TABLE IF NOT EXISTS uprofile.user (user_id int PRIMARY KEY, user_name text, user_bcity text)')
-# #</createTable>
-
-# #<insertData>
-# # session.execute("INSERT INTO  uprofile.user  (user_id, user_name , user_bcity) VALUES (%s,%s,%s)", [1,'Lybkov','Seattle'])
-# # session.execute("INSERT INTO  uprofile.user  (user_id, user_name , user_bcity) VALUES (%s,%s,%s)", [2,'Doniv','Dubai'])
-# # session.execute("INSERT INTO  uprofile.user  (user_id, user_name , user_bcity) VALUES (%s,%s,%s)", [3,'Keviv','Chennai'])
-# # session.execute("INSERT INTO  uprofile.user  (user_id, user_name , user_bcity) VALUES (%s,%s,%s)", [4,'Ehtevs','Pune'])
-# # session.execute("INSERT INTO  uprofile.user  (user_id, user_name , user_bcity) VALUES (%s,%s,%s)", [5,'Dnivog','Belgaum'])
-# # session.execute("INSERT INTO  uprofile.user  (user_id, user_name , user_bcity) VALUES (%s,%s,%s)", [6,'Ateegk','Narewadi'])
-# # session.execute("INSERT INTO  uprofile.user  (user_id, user_name , user_bcity) VALUES (%s,%s,%s)", [7,'KannabbuS','Yamkanmardi'])
-# # #</insertData>
-
-# #<queryAllItems>
-# print ("\nSelecting All")
-# rows = session.execute('SELECT * FROM uprofile.user')
-# PrintTable(rows)
-# #</queryAllItems>
-
-# #<queryByID>
-# print ("\nSelecting Id=1")
-# rows = session.execute('SELECT * FROM uprofile.user where user_id=1')
-# PrintTable(rows)
-# #</queryByID>
-
-# cluster.shutdown()
+    return jsonify(PrintTable(rows)), 200
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
