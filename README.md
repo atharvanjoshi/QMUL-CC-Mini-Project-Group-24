@@ -2,7 +2,7 @@
 Cloud Computing Mini Project done by Group 24 at Queen Mary University of London.  
 You can access the project here: https://qmul-cc-miniproj-group24.azurewebsites.net/  
 **Please note:**  
-The website will take time to load initially if it is accessed after a long time since we are using the free version of the Azure web app service and the server shuts itself down after a brief period of inactivity and is started again only after the website is accessed.
+The website will take time to load initially if it is accessed after a long time since we are using the free version of the Azure web app service and the server shuts itself down after a brief period of inactivity and is started again only after the website is accessed.  
 Link of Explanation Youtube Video: https://youtu.be/KOv2viB2zUg
 
 # External Secure Database
