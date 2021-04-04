@@ -67,5 +67,5 @@ __Reset Password of Teacher:__ This page can reset the Teacher password by enter
 __Reset Password of Admins:__ This page can reset the Admins pasword by entering their ID.
 
 __Holiday List:__ Is an external an external REST service to complement its functionality with the existing REST API. The main function is to display the Holiday Calendar for the United Kingdom.
-
+ 
 
