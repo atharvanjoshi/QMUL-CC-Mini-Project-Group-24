@@ -1,6 +1,9 @@
 # Rest API for the Cloud Computing mini-project
 
-You can have access https://qmul-cc-miniproj-group24.azurewebsites.net/
+You can access the project here: https://qmul-cc-miniproj-group24.azurewebsites.net/  
+**Please note:**  
+The website will take time to load initially if it is accessed after a long time since we are using the free version of the Azure web app service and the server shuts itself down after a brief period of inactivity and is started again only after the website is accessed.
+
 
 # QMUL-CC-Mini-Project-Group-24
 Cloud Computing Mini Project done by Group 24 at Queen Mary University of London
