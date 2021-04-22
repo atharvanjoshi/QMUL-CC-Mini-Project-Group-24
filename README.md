@@ -1,4 +1,4 @@
-### This Project deployment will not work anymore since the Databases and App Services have been deleted since Grading is over and the free Student Balance is almost over. However, you can modify it to run on a local databases and also run it on localhost.
+### This Project deployment will not work anymore since the Databases and App Services have been deleted since Grading is over and the free Student Balance is almost over. However, you can modify it to run on a local database and also run it on localhost.
 # QMUL-CC-Mini-Project-Group-24
 Cloud Computing Mini Project done by Group 24 at Queen Mary University of London.  
 You can access the project here: https://qmul-cc-miniproj-group24.azurewebsites.net/  
